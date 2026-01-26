@@ -102,7 +102,7 @@ const Busquedas = () => {
                 
                 if (data.length === 0) {
                     const sugerencias = obtenerSugerencias(txtBuscar, data);
-                    navigate('/error404', {
+                    navigate('/error405', {
                         state: {
                             message: `No se encontraron productos para "${txtBuscar}"`,
                             tipo: 'sin_resultados',
@@ -120,7 +120,7 @@ const Busquedas = () => {
             if (categoriaFiltro !== 'all') {
                 data = data.filter(p => p.category === categoriaFiltro);
                 if (data.length === 0 && txtBuscar) {
-                    navigate('/error404', {
+                    navigate('/error405', {
                         state: {
                             message: `No hay productos para "${txtBuscar}" en ${categoriaFiltro}`,
                             tipo: 'sin_resultados_categoria',
