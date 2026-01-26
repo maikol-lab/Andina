@@ -10,7 +10,7 @@ const Busquedas = () => {
     const [orden, setOrden] = useState('relevance');
     const [categorias, setCategorias] = useState([]);
     const [busquedaRealizada, setBusquedaRealizada] = useState(false);
-    
+
     const location = useLocation();
     const navigate = useNavigate();
     const txtBuscar = location.state?.txtBuscar || '';
@@ -50,13 +50,13 @@ const Busquedas = () => {
     const obtenerSugerencias = (busqueda, productosExistentes) => {
         const sugerencias = [];
         const busquedaLower = busqueda.toLowerCase();
-        
+
         categorias.forEach(cat => {
             if (cat.toLowerCase().includes(busquedaLower) || busquedaLower.includes(cat.toLowerCase())) {
                 sugerencias.push(cat);
             }
         });
-        
+
         if (productosExistentes && productosExistentes.length > 0) {
             productosExistentes.slice(0, 3).forEach(p => {
                 if (!sugerencias.includes(p.category)) {
@@ -64,7 +64,7 @@ const Busquedas = () => {
                 }
             });
         }
-        
+
         const correccion = esBusquedaProbablementeErronea(busqueda);
         if (correccion && !sugerencias.includes(correccion)) {
             sugerencias.unshift(correccion);
@@ -78,7 +78,7 @@ const Busquedas = () => {
             setLoading(true);
             setError(null);
             setBusquedaRealizada(true);
-            
+
             if (txtBuscar.trim() === '' && categoriaFiltro === 'all') {
                 const response = await fetch('https://fakestoreapi.com/products');
                 let data = await response.json();
@@ -86,7 +86,7 @@ const Busquedas = () => {
                 setLoading(false);
                 return;
             }
-            
+
             const response = await fetch('https://fakestoreapi.com/products');
             if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
             let data = await response.json();
@@ -94,12 +94,12 @@ const Busquedas = () => {
             // Filtrar por texto
             if (txtBuscar) {
                 const busquedaLower = txtBuscar.toLowerCase();
-                data = data.filter(p => 
+                data = data.filter(p =>
                     p.title.toLowerCase().includes(busquedaLower) ||
                     p.description.toLowerCase().includes(busquedaLower) ||
                     p.category.toLowerCase().includes(busquedaLower)
                 );
-                
+
                 if (data.length === 0) {
                     const sugerencias = obtenerSugerencias(txtBuscar, data);
                     navigate('/error405', {
@@ -177,7 +177,7 @@ const Busquedas = () => {
     return (
         <div className="container py-5">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-            
+
             {/* Header */}
             <div className="animate__animated animate__fadeInDown text-center mb-5">
                 <h1>{txtBuscar ? `Resultados para: "${txtBuscar}"` : 'Todos los productos'}</h1>
@@ -188,14 +188,14 @@ const Busquedas = () => {
             <div className="row mb-4">
                 <div className="col-lg-8 mb-3">
                     <div className="d-flex flex-wrap gap-2 justify-content-center justify-content-lg-start">
-                        <button 
+                        <button
                             className={`btn btn-hover-custom ${categoriaFiltro === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}
                             onClick={() => setCategoriaFiltro('all')}
                         >
                             Todas
                         </button>
                         {categorias.map(cat => (
-                            <button 
+                            <button
                                 key={cat}
                                 className={`btn btn-hover-custom ${categoriaFiltro === cat ? 'btn-info text-white' : 'btn-outline-info'}`}
                                 onClick={() => setCategoriaFiltro(cat)}
@@ -205,7 +205,7 @@ const Busquedas = () => {
                         ))}
                     </div>
                 </div>
-                
+
                 <div className="col-lg-4">
                     <select className="form-select btn-hover-custom" value={orden} onChange={(e) => setOrden(e.target.value)}>
                         <option value="relevance">Relevancia</option>
@@ -225,7 +225,7 @@ const Busquedas = () => {
 
             {/* Footer de acciones */}
             <div className="text-center mt-5">
-                <button className="btn btn-outline-secondary me-2 btn-hover-custom" onClick={() => navigate('/')}>Ir al inicio</button>
+                <button className="btn btn-outline-secondary me-2 btn-hover-custom" onClick={() => navigate('/home')}>Ir al inicio</button>
                 <button className="btn btn-primary btn-hover-custom" onClick={handleNuevaBusqueda}>Nueva búsqueda</button>
             </div>
 
